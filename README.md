@@ -17,7 +17,7 @@ openmpi/
 Five sorting algorithms benchmarked in both serial and parallel (MPI) modes on an Intel Core i5-12400F:
 bubble, selection, quicksort, merge sort, and bitonic sort.
 
-The parallel implementation uses **dynamic scattering** to distribute work across processes and a **tree reduction merge** (O(log P)) to collect results. So communication overhead scales gently with process count.
+Two parallel approaches are included. `parallel.c` does dynamic scatter + tree reduction merge simple, but rank 0 ends up doing a big O(n) sequential merge at the end. `psrs.c` fixes that with **Parallel Regular Sampling Sort**: processes negotiate splitters, redistribute data all-to-all, and each one independently sorts its own slice. No bottleneck.
 
 ### Build
 
@@ -26,8 +26,11 @@ From `src/`:
 # serial
 gcc -O3 -march=native -Wall -Wextra sort.c serial.c -o serial -DQUICK
 
-# parallel
+# parallel tree reduction
 mpicc -O3 -march=native -Wall -Wextra sort.c parallel.c -o parallel -DQUICK
+
+# parallel PSRS
+mpicc -O3 -march=native -Wall -Wextra sort.c psrs.c -o psrs
 ```
 
 Replace `-DQUICK` with `-DBUBBLE`, `-DSELECTION`, `-DMERGE`, or `-DBITONIC`.
@@ -37,6 +40,7 @@ Replace `-DQUICK` with `-DBUBBLE`, `-DSELECTION`, `-DMERGE`, or `-DBITONIC`.
 ```bash
 ./serial 134217728
 mpiexec -np 8 ./parallel 134217728
+mpiexec --use-hwthread-cpus -np 12 ./psrs 134217728
 ```
 
 ### Visualize
@@ -45,9 +49,10 @@ mpiexec -np 8 ./parallel 134217728
 cd src && python3 visualize.py
 ```
 
-Reads `../output/data.csv`, writes `execution.png` and `speedup.png` to `../output/`.
+Reads `../output/data.csv`, writes `execution.png`, `speedup.png`, and `psrs_comparison.png` to `../output/`.
 
 ## Highlights
 
-- Quicksort scales the best in parallel. 12 processes cuts serial time from 12s to ~3.8s
+- Quicksort scales the best of the tree-reduction group 12 cores cuts 12s down to ~3.8s
+- PSRS does better: same 12 cores gets to ~1.8s (6.8x speedup vs 3.2x for tree reduction)
 - Bubble sort is painful at any scale (1517s serial on 1M elements)
