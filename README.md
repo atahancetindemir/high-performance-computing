@@ -8,12 +8,12 @@ Exploring parallel programming with MPI and CUDA. Mostly benchmarking how much f
 
 ```
 openmpi/
-├── intro-to-openmpi/     # MPI basics: hello world, scatter/gather, broadcast, reduce, pi
+├── intro/                # MPI basics: hello world, scatter/gather, broadcast, reduce, pi
 └── sorting-algorithms/
     ├── src/              # C sources + Python visualizer
     └── output/           # benchmark data (CSV) and plots (PNG)
 cuda/
-└── intro-to-cuda/        # CUDA basics: hello world, vector add
+└── intro/                # CUDA basics: hello world, vector add
 ```
 
 ## Requirements
@@ -24,7 +24,7 @@ OpenMPI and gcc for `openmpi/`, CUDA toolkit and an NVIDIA GPU for `cuda/`, pand
 
 One small program per concept: hello world, send/receive, master/worker, scatter, gather, broadcast, reduce, and a pi benchmark. Each file ends with a comment block showing the command it was run with and what it printed.
 
-From `openmpi/intro-to-openmpi/`:
+From `openmpi/intro/`:
 ```bash
 make
 mpiexec -n 4 ./build/broadcast
@@ -47,7 +47,7 @@ Bubble and selection cross the ideal line because they are O(n²). Splitting n e
 
 ### Build
 
-From `sorting-algorithms/`:
+From `openmpi/sorting-algorithms/`:
 ```bash
 make                       # all variants
 make build/parallel-quick  # just one
@@ -76,7 +76,7 @@ Reads `../output/data.csv`, writes `execution.png`, `speedup.png`, and `psrs_com
 
 ## CUDA
 
-From `cuda/intro-to-cuda/`:
+From `cuda/intro/`:
 ```bash
 make
 ./build/hello_world
