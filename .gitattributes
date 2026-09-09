@@ -1,2 +1,4 @@
+# Normalize every text file to LF, both in the repository and in the working tree
 * text=auto eol=lf
+# Binary files, never convert
 *.png binary
