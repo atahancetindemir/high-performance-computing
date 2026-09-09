@@ -2,8 +2,8 @@ NVCC   := nvcc
 NVFLAGS := -O3
 BUILD  := build
 
-SRCS := $(wildcard *.cu)
-BINS := $(patsubst %.cu,$(BUILD)/%,$(SRCS))
+SRCS := $(wildcard src/*.cu)
+BINS := $(patsubst src/%.cu,$(BUILD)/%,$(SRCS))
 
 .PHONY: all clean
 all: $(BINS)
@@ -11,7 +11,7 @@ all: $(BINS)
 $(BUILD):
 	mkdir -p $(BUILD)
 
-$(BUILD)/%: %.cu | $(BUILD)
+$(BUILD)/%: src/%.cu | $(BUILD)
 	$(NVCC) $(NVFLAGS) $< -o $@
 
 clean:
