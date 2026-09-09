@@ -16,6 +16,22 @@ cuda/
 └── intro-to-cuda/        # CUDA basics: hello world, vector add
 ```
 
+## Requirements
+
+OpenMPI and gcc for `openmpi/`, CUDA toolkit and an NVIDIA GPU for `cuda/`, pandas and matplotlib for the visualizer.
+
+## MPI Basics
+
+One small program per concept: hello world, send/receive, master/worker, scatter, gather, broadcast, reduce, and a pi benchmark. Each file ends with a comment block showing the command it was run with and what it printed.
+
+From `openmpi/intro-to-openmpi/`:
+```bash
+make
+mpiexec -n 4 ./build/broadcast
+```
+
+If MPI complains about not enough slots, it is counting physical cores, not threads. Throw in `--use-hwthread-cpus`.
+
 ## Sorting Algorithms
 
 Five sorting algorithms benchmarked in both serial and parallel (MPI) modes on an Intel Core i5-12400F:
@@ -47,6 +63,8 @@ Binaries go to `build/`, named by algorithm: `serial-quick`, `parallel-bubble`, 
 mpiexec -np 8 ./build/parallel-quick 134217728
 mpiexec --use-hwthread-cpus -np 12 ./build/psrs 134217728
 ```
+
+Each run prints one `Time taken:` line. Those go into `output/data.csv` by hand, there is no runner script yet.
 
 ### Visualize
 
